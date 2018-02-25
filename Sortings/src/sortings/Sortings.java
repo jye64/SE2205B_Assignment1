@@ -3,25 +3,29 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package assignment1;
+package sortings;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
 /**
  *
  * @author alanye
  */
-public class Assignment1 extends Application {
+public class Sortings extends Application {
     
     @Override
     public void start(Stage stage) throws Exception {
-        Parent root = FXMLLoader.load(getClass().getResource("FXMLDocument.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("SortingEngine.fxml"));
         
         Scene scene = new Scene(root);
+        
+        stage.getIcons().add(new Image("file:src/sortings/WesternLogo.png"));
+        stage.setTitle("Sorting Engine");
         
         stage.setScene(scene);
         stage.show();
