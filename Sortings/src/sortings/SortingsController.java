@@ -5,8 +5,10 @@
  */
 package sortings;
 
+import java.awt.Rectangle;
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.concurrent.ThreadLocalRandom;
 import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -18,12 +20,15 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.layout.Pane;
+import javafx.scene.shape.*;
+
+
 
 /**
  *
  * @author alanye
  */
-public class SortingEngineController implements Initializable {
+public class SortingsController implements Initializable {
     
     @FXML
     private ComboBox algorithm;
@@ -35,23 +40,31 @@ public class SortingEngineController implements Initializable {
     private Pane view;
     
     @FXML
-    private Label arraySizeLabel;
+    private Label arraySize;
     
     @FXML
     Button sort;
     @FXML
     Button reset;
     
-    final ObservableList<String> data = FXCollections.observableArrayList();
-    
+    Model model = new Model();
+   
+   
     @FXML
     public void SetSortStrategy(){
         
+        algorithm.getValue().toString();
+       
     }
     
     @FXML
     public void sortBtn_Click(){
-        int arraySize = (int) arraySizeSlider.getValue();
+        
+        model.setArraySize((int) arraySizeSlider.getValue());
+        model.getUnsortedList();
+        
+
+        
     }
     
     @FXML
@@ -62,8 +75,8 @@ public class SortingEngineController implements Initializable {
     }
     
     @FXML
-    public void arraySizeSlider_ValueChanged(){
-        
+    public int arraySizeSlider_ValueChanged(){
+       return (int)arraySizeSlider.getValue();
     }
 
     
@@ -71,18 +84,20 @@ public class SortingEngineController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         
         algorithm.getItems().addAll("Merge Sort", "Selection Sort");
-        arraySizeSlider.setMin(0);
-        arraySizeSlider.setMax(100);
+        arraySizeSlider.setMin(32);
+        arraySizeSlider.setMax(125);
         arraySizeSlider.setValue(50);
         arraySizeSlider.setShowTickMarks(true);
         arraySizeSlider.setShowTickLabels(true);
+        arraySize.setText(Double.toString(arraySizeSlider.getValue()));
         
         arraySizeSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
-
-            arraySizeLabel.setText(Double.toString(newValue.intValue()));
             
+            arraySize.setText(Double.toString(newValue.intValue()));
+       
         });
-            
+   
     }    
     
+
 }

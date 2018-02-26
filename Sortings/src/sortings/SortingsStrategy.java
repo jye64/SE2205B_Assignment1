@@ -9,10 +9,8 @@ package sortings;
  *
  * @author alanye
  */
-public interface SortingStrategy {
+public interface SortingsStrategy {
     
-    public void mergeSort(int[] array,int first, int last);
-    
-    public void selectionSort (int[] array);
+    public void sort(int[] array);
     
 }

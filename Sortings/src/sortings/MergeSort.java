@@ -9,54 +9,56 @@ package sortings;
  *
  * @author alanye
  */
-public class MergeSort implements SortingStrategy {
+public class MergeSort implements SortingsStrategy {
     
-    @Override
-    public void mergeSort (int[] array, int first, int last){
+    private int[] array;
+    private int[] helper;
+    
+    private int array_size;
+   
+    public void sort (int[] inputArr){
+        
+        this.array = inputArr;
+        this.array_size = inputArr.length;
+        this.helper = new int [array_size];
+        mergeSort(0, array_size-1);
+        
+    }
+    
+    private void mergeSort(int first, int last){
         if (first < last){
-            int middle = (first+last)/2;
-            mergeSort(array, first, middle);
-            mergeSort(array, middle+1,last);
-            merge(array, first, middle, last);
+            int middle = first+(last-first)/2;
+            mergeSort(first, middle);
+            mergeSort(middle+1,last);
+            merge(first, middle, last);
         }  
     }
      
-    public void merge(int[] array, int low, int middle, int high){
+    private void merge(int low, int middle, int high){
         
-	int[] helper = new int[array.length];
-	for (int i = low; i <= high; i++) {
-		helper[i] = array[i];
-	}
-	
-	int helperLeft = low;
-	int helperRight = middle+1;
-	int current = low;
-	
-	while (helperLeft <= middle && helperRight <=high) {
-		if(helper[helperLeft] <= helper[helperRight]){
-			array[current] = helper[helperLeft];
-			helperLeft++;
-			
-		}else{
-			array[current] = helper[helperRight];
-			helperRight++;
-		}
-		current ++;		
-	}
-	
-	int remaining = middle - helperLeft;
-	for (int i = 0; i <= remaining; i++) {
-		array[current+i] = helper[helperLeft+ i];
-	}
+	for (int i = low; i<=high; i++){
+            helper[i] = array[i];
+        }
+        
+        int i = low;
+        int j = middle+1;
+        int k= low;
+        
+        while (i<= middle && j<= high){
+            if (helper[i] <= helper [j]){
+                array[k] = helper[i];
+                i++;
+            }else{
+                array[k] = helper[j];
+                j++;
+            }
+            k++;
+        }
+        while (i<=middle){
+            array[k] = helper[i];
+            k++;
+            i++;
+        }
     }
-
-  
-
-    @Override
-    public void selectionSort(int[] array) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    
-    
+ 
 }

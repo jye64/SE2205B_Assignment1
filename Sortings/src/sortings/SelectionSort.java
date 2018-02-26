@@ -9,10 +9,10 @@ package sortings;
  *
  * @author alanye
  */
-public class SelectionSort implements SortingStrategy{
+public class SelectionSort implements SortingsStrategy{
 
     @Override
-    public void selectionSort(int[] array) {
+    public void sort(int[] array) {
         for (int i=0; i<array.length-1; i++){
             int min_Index = i;
             for (int j=i+1; j<array.length; j++){
@@ -26,12 +26,6 @@ public class SelectionSort implements SortingStrategy{
            
         }
     }
-    
-    @Override
-    public void mergeSort(int[] array, int first, int last) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-    
 }
     
 
