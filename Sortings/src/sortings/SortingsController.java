@@ -5,10 +5,8 @@
  */
 package sortings;
 
-import java.awt.Rectangle;
 import java.net.URL;
 import java.util.ResourceBundle;
-import java.util.concurrent.ThreadLocalRandom;
 import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -20,7 +18,8 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.layout.Pane;
-import javafx.scene.shape.*;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 
 
 
@@ -48,35 +47,45 @@ public class SortingsController implements Initializable {
     Button reset;
     
     Model model = new Model();
-   
-   
+    
+    private String choice;
+    
     @FXML
     public void SetSortStrategy(){
-        
-        algorithm.getValue().toString();
-       
+        choice = algorithm.getValue().toString();
     }
     
     @FXML
     public void sortBtn_Click(){
         
-        model.setArraySize((int) arraySizeSlider.getValue());
-        model.getUnsortedList();
-        
-
-        
+       if (choice == "Merge Sort"){
+           MergeSort merge = new MergeSort();
+           merge.sort(model.getUnsortedList());
+           update(model.getUnsortedList());
+         
+       }else if (choice == "Selection Sort"){
+           SelectionSort select = new SelectionSort();
+           select.sort(model.getUnsortedList());
+           update(model.getUnsortedList());
+           
+       }
+  
     }
     
     @FXML
     public void resetBtn_Click(){
-        algorithm.setValue(null);
-        arraySizeSlider.setValue(50);
         
+        model.reset((int)arraySizeSlider.getValue());
+        update(model.getUnsortedList());
+       
     }
     
     @FXML
-    public int arraySizeSlider_ValueChanged(){
-       return (int)arraySizeSlider.getValue();
+    public void arraySizeSlider_ValueChanged(){
+        
+        model.reset((int)arraySizeSlider.getValue());
+        update(model.getUnsortedList());
+        
     }
 
     
@@ -87,17 +96,38 @@ public class SortingsController implements Initializable {
         arraySizeSlider.setMin(32);
         arraySizeSlider.setMax(125);
         arraySizeSlider.setValue(50);
-        arraySizeSlider.setShowTickMarks(true);
-        arraySizeSlider.setShowTickLabels(true);
+//        arraySizeSlider.setShowTickMarks(true);
+//        arraySizeSlider.setShowTickLabels(true);
         arraySize.setText(Double.toString(arraySizeSlider.getValue()));
         
         arraySizeSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
-            
             arraySize.setText(Double.toString(newValue.intValue()));
-       
-        });
+            arraySizeSlider_ValueChanged();
+        }); 
+        
+        resetBtn_Click();
    
     }    
+    
+    public void update(int [] Arr){
+        view.getChildren().clear();
+        for (int i=0; i<arraySizeSlider.getValue(); i++){
+            double width  = (view.widthProperty().getValue()/arraySizeSlider.getValue());
+            double height = (Arr[i]/arraySizeSlider.getValue())*view.heightProperty().getValue();
+
+            double x = width*i;
+            double y = view.heightProperty().getValue()-height;
+
+            Rectangle r = new Rectangle();
+            r.setX(x);
+            r.setY(y);
+            r.setWidth(width-1);
+            r.setHeight(height);
+            r.setFill(Color.RED);
+            
+            view.getChildren().add(r);
+        }
+    }
     
 
 }
