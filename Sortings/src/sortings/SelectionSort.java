@@ -10,20 +10,21 @@ package sortings;
  * @author alanye
  */
 public class SelectionSort implements SortingsStrategy{
-
+  
     @Override
-    public void sort(int[] array) {
-        for (int i=0; i<array.length-1; i++){
-            int min_Index = i;
-            for (int j=i+1; j<array.length; j++){
-                if (array[j] < array[i]){
-                    min_Index = j;
-                }
-                int smallerElement = array[min_Index];
-                array[min_Index] = array[i];
-                array[i] = smallerElement;
-            }
-           
+    public void sort(int[] arr){
+
+        int n = arr.length;
+        for (int i = 0; i < n-1; i++)
+        {
+            int min_idx = i;
+            for (int j = i+1; j < n; j++)
+                if (arr[j] < arr[min_idx])
+                    min_idx = j;
+ 
+            int temp = arr[min_idx];
+            arr[min_idx] = arr[i];
+            arr[i] = temp;
         }
     }
 }

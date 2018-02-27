@@ -13,8 +13,8 @@
       <Label layoutX="198.0" layoutY="465.0" text="Array Size" />
       <Button fx:id="Sort" layoutX="620.0" layoutY="462.0" mnemonicParsing="false" onAction="#sortBtn_Click" prefHeight="27.0" prefWidth="53.0" text="Sort" />
       <Button fx:id="Reset" layoutX="686.0" layoutY="462.0" mnemonicParsing="false" onAction="#resetBtn_Click" prefHeight="27.0" prefWidth="53.0" text="Reset" />
-      <Slider fx:id="arraySizeSlider" layoutX="277.0" layoutY="465.0" onDragDetected="#arraySizeSlider_ValueChanged" prefHeight="16.0" prefWidth="281.0" />
-      <Pane fx:id="view" prefHeight="444.0" prefWidth="747.0" />
+      <Slider fx:id="arraySizeSlider" layoutX="277.0" layoutY="465.0" prefHeight="16.0" prefWidth="281.0" />
+      <Pane fx:id="view" prefHeight="445.0" prefWidth="753.0" />
       <Label fx:id="arraySize" layoutX="567.0" layoutY="462.0" prefHeight="27.0" prefWidth="53.0" text="Label" />
    </children>
 </AnchorPane>

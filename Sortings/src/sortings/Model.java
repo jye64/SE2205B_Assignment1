@@ -5,7 +5,8 @@
  */
 package sortings;
 
-import java.util.concurrent.ThreadLocalRandom;
+import java.util.Random;
+
 
 /**
  *
@@ -14,28 +15,34 @@ import java.util.concurrent.ThreadLocalRandom;
 public class Model {
     
     private int[] intArray;
-    private int   arraySize;
+    private int   arraySize = 50;
     
-    
-    public void reset(int size){
-        
-    }
-    
-    public void getUnsortedList(){
-        
+    public Model(){
         intArray = new int[arraySize];
+        Random rand = new Random();
         for (int i=0; i<arraySize;i++){
-            int randomNum = ThreadLocalRandom.current().nextInt(1, arraySize+1);
+            int randomNum = rand.nextInt(arraySize)+1;
             intArray[i]=randomNum;
         }
-      
-        
+    }
+    
+    public void reset(int size){
+        arraySize = size;
+        intArray = null;
+        intArray = new int[arraySize];
+        Random rand = new Random ();
+        for (int i=0; i<arraySize;i++){
+            int randomNum = rand.nextInt(arraySize)+1;
+            intArray[i]=randomNum;
+        }
+    }
+    
+    public int[] getUnsortedList(){
+        return intArray;
     }
     
     public int getArraySize(){
-       
-        return arraySize;
-        
+        return arraySize; 
     }
     
     public void setArraySize(int x){
