@@ -15,6 +15,10 @@ public class MergeSort implements SortingsStrategy {
     private int[] helper;
     
     private int array_size;
+    
+    private int i;
+    private int j;
+    private int k;
    
     public void sort (int[] inputArr){
         
@@ -60,5 +64,4 @@ public class MergeSort implements SortingsStrategy {
             i++;
         }
     }
- 
 }

@@ -30,11 +30,23 @@ public class Model {
         arraySize = size;
         intArray = null;
         intArray = new int[arraySize];
-        Random rand = new Random ();
-        for (int i=0; i<arraySize;i++){
+        Random rand = new Random();
+        int flag = 0;  
+        boolean repeated;
+        while (flag<arraySize){
             int randomNum = rand.nextInt(arraySize)+1;
-            intArray[i]=randomNum;
-        }
+            repeated = false;
+            for (int i=0; i<flag;i++){
+                if(intArray[i]==randomNum){
+                    repeated = true;
+                    break;
+                }
+            }
+            if (repeated == false){
+                intArray[flag]=randomNum;
+                flag++;
+            }
+        } 
     }
     
     public int[] getUnsortedList(){
@@ -47,6 +59,15 @@ public class Model {
     
     public void setArraySize(int x){
         arraySize = x;
+    }
+    
+    public boolean isSorted(){
+        int smaller = intArray[0];
+        for (int i=1; i<arraySize-1; i++){
+            if (smaller>intArray[i])
+                return false;
+        }
+        return true;
     }
     
 }

@@ -7,6 +7,7 @@ package sortings;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -20,6 +21,7 @@ import javafx.scene.control.Slider;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.stage.Stage;
 
 
 
@@ -45,14 +47,23 @@ public class SortingsController implements Initializable {
     Button sort;
     @FXML
     Button reset;
-    
+    @FXML
+    Button exit;
+           
     Model model = new Model();
     
     private String choice;
     
+    
     @FXML
     public void SetSortStrategy(){
         choice = algorithm.getValue().toString();
+    }
+    
+    @FXML
+    public void exitBtn_Click(){
+        Stage stage = (Stage)view .getScene().getWindow();
+        stage.close();
     }
     
     @FXML
@@ -61,13 +72,38 @@ public class SortingsController implements Initializable {
        if (choice == "Merge Sort"){
            MergeSort merge = new MergeSort();
            merge.sort(model.getUnsortedList());
-           update(model.getUnsortedList());
-         
+           new Thread(()->{
+               try{
+                   while(true){
+                       Platform.runLater(()->{
+                           update(model.getUnsortedList());
+                       });
+                       Thread.sleep(50);   
+                   }
+               }catch (InterruptedException ex){
+                   
+               }
+           
+           }).start();
+            
+           
        }else if (choice == "Selection Sort"){
+           
            SelectionSort select = new SelectionSort();
            select.sort(model.getUnsortedList());
-           update(model.getUnsortedList());
-           
+           new Thread(()-> {  
+               try{
+                   while(true){
+                   Platform.runLater(()->{  
+                       update(model.getUnsortedList());
+                   });
+                   Thread.sleep(50);    
+                   }
+               }
+               catch (InterruptedException ex){
+                   
+               }
+           }).start();   
        }
   
     }
@@ -92,7 +128,7 @@ public class SortingsController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         
-        algorithm.getItems().addAll("Merge Sort", "Selection Sort");
+        algorithm.getItems().addAll("Selection Sort","Merge Sort");
         arraySizeSlider.setMin(32);
         arraySizeSlider.setMax(125);
         arraySizeSlider.setValue(50);
@@ -110,6 +146,7 @@ public class SortingsController implements Initializable {
     }    
     
     public void update(int [] Arr){
+        
         view.getChildren().clear();
         for (int i=0; i<arraySizeSlider.getValue(); i++){
             double width  = (view.widthProperty().getValue()/arraySizeSlider.getValue());
