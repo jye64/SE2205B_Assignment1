@@ -15,10 +15,6 @@ public class MergeSort implements SortingsStrategy {
     private int[] helper;
     
     private int array_size;
-    
-    private int i;
-    private int j;
-    private int k;
    
     public void sort (int[] inputArr){
         
@@ -30,13 +26,23 @@ public class MergeSort implements SortingsStrategy {
     }
     
     private void mergeSort(int first, int last){
-        if (first < last){
-            int middle = first+(last-first)/2;
-            mergeSort(first, middle);
-            mergeSort(middle+1,last);
-            merge(first, middle, last);
-        }  
+        new Thread(()->{
+            try{
+                if (first < last){
+                    int middle = first+(last-first)/2;
+                    mergeSort(first, middle);
+                    mergeSort(middle+1,last);
+                    merge(first, middle, last);
+                    Thread.sleep(100);
+                }
+            
+            }catch (InterruptedException ex){
+                
+            }
+            
+        }).start();
     }
+     
      
     private void merge(int low, int middle, int high){
         
