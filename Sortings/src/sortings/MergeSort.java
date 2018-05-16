@@ -16,6 +16,7 @@ public class MergeSort implements SortingsStrategy {
     
     private int array_size;
    
+    @Override
     public void sort (int[] inputArr){
         
         this.array = inputArr;
