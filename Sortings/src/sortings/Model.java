@@ -12,18 +12,18 @@ import java.util.Random;
  *
  * @author alanye
  */
-public class Model {
-    
+public final class Model {
     private int[] intArray;
-    private int   arraySize = 50;
+    private int arraySize;
+    private static final int DEFAULT_SIZE = 60;
+    
+    public Model(int size){
+        this.arraySize = size;
+        this.reset(size);
+    }
     
     public Model(){
-        intArray = new int[arraySize];
-        Random rand = new Random();
-        for (int i=0; i<arraySize;i++){
-            int randomNum = rand.nextInt(arraySize)+1;
-            intArray[i]=randomNum;
-        }
+        this(DEFAULT_SIZE);
     }
     
     public void reset(int size){
@@ -53,21 +53,20 @@ public class Model {
         return intArray;
     }
     
-    public int getArraySize(){
-        return arraySize; 
+    public int getSize(){
+        return arraySize;
     }
     
-    public void setArraySize(int x){
-        arraySize = x;
+    public void setSize(int size){
+        arraySize = size;
+        reset(this.arraySize);
     }
     
     public boolean isSorted(){
-        int smaller = intArray[0];
-        for (int i=1; i<arraySize-1; i++){
-            if (smaller>intArray[i])
+        for (int i=0; i<arraySize; i++){
+            if (intArray[i]>intArray[i+1])
                 return false;
         }
         return true;
     }
-    
 }

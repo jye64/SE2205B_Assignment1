@@ -8,13 +8,11 @@ package sortings;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.application.Platform;
-import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
@@ -32,139 +30,142 @@ import javafx.stage.Stage;
 public class SortingsController implements Initializable {
     
     @FXML
-    private ComboBox algorithm;
-    
+    Pane view;
     @FXML
-    private Slider arraySizeSlider;
-    
+    Label arraySize;
     @FXML
-    private Pane view;
-    
+    Slider arraySizeSlider;
     @FXML
-    private Label arraySize;
+    ComboBox algorithm;
     
-    @FXML
-    Button sort;
-    @FXML
-    Button reset;
-    @FXML
-    Button exit;
-           
-    Model model = new Model();
+    final ObservableList<String> strategys = FXCollections.observableArrayList();
+    SortingsStrategy sortingsMethod;
     
-    private String choice;
+    Thread sort;                                                                //use Thread sort to prevent interupt.
     
+    public Model _model;
     
-    @FXML
     public void SetSortStrategy(){
-        choice = algorithm.getValue().toString();
+        //System.out.println(algorithm.getValue());
+        new Thread (()->{
+            if (sort!=null) {                                                   //if the sorting thread is processing, the change will be done after sorting.
+                try {
+                    sort.join();
+                } catch (InterruptedException ex) {
+                    
+                }
+            }
+
+            Platform.runLater(()->{
+
+                String selected=(String)algorithm.getValue();
+                if (selected.equals("Selection Sort")){
+                    sortingsMethod=new SelectionSort();
+                }
+                if (selected.equals("Merge Sort")){
+                    sortingsMethod=new MergeSort();
+                }
+            });
+        }).start();
     }
     
-    @FXML
-    public void exitBtn_Click(){
-        Stage stage = (Stage)view .getScene().getWindow();
-        stage.close();
-    }
-    
-    @FXML
     public void sortBtn_Click(){
-        
-       if (choice == "Merge Sort"){
-           MergeSort merge = new MergeSort();
-           merge.sort(model.getUnsortedList());
-           new Thread(()->{
-               try{
-                   while(true){
-                       Platform.runLater(()->{
-                           update(model.getUnsortedList());
-                       });
-                       Thread.sleep(50);   
-                   }
-               }catch (InterruptedException ex){
+        if (sort!=null&&sort.isAlive()) {                                       //prevent clicking sort btn when the array is being sorted
+            return;
+        }
+        sortingsMethod.sort(_model.getUnsortedList());
+        sort=new Thread(()->{
+            while (!_model.isSorted()){                                         //use is alive to know the sorting thread is running or not, if it is not, stop updating GUI
+                Platform.runLater(()->{updateUI();});                           //really really really important!!!!!
+                try {
+                    Thread.sleep(10);
+                } catch (InterruptedException ex) {
                    
-               }
-           
-           }).start();
-            
-           
-       }else if (choice == "Selection Sort"){
-           
-           SelectionSort select = new SelectionSort();
-           select.sort(model.getUnsortedList());
-           new Thread(()-> {  
-               try{
-                   while(true){
-                   Platform.runLater(()->{  
-                       update(model.getUnsortedList());
-                   });
-                   Thread.sleep(50);    
-                   }
-               }
-               catch (InterruptedException ex){
-                   
-               }
-           }).start();   
-       }
-  
+                }
+            }
+            Platform.runLater(()->{updateUI();});                               //note that, every function that involves the GUI need to call within Platform.runLater()!!!!!
+        });
+        sort.start();
+
     }
     
-    @FXML
+    public void arraySizeBar_ValueChanged(){
+        //System.out.println("bar changed");
+        int size = (int)Math.round(arraySizeSlider.getValue());                 //round the value to integer.
+        arraySizeSlider.setValue(size);     
+        arraySize.setText(Integer.toString(size));
+        _model.setSize(size);
+        //_model.reset(size);                                                   setSize will call reset() automatically
+        //>>>>>need to add UI control>>>>>
+        updateUI();
+    }
+    
     public void resetBtn_Click(){
         
-        model.reset((int)arraySizeSlider.getValue());
-        update(model.getUnsortedList());
-       
+        //System.out.println("reset");
+        _model.reset(_model.getSize());
+        //>>>>>need to add UI control>>>>>
+        updateUI();
     }
     
-    @FXML
-    public void arraySizeSlider_ValueChanged(){
+    public void exitBtn_Click(){
+        Stage s=(Stage) arraySize.getScene().getWindow();
+        s.close();
+    }
+    
+
+    
+    public void updateUI(){
+//        Rectangle r=new Rectangle(10,100,Color.RED);
+//        Rectangle r2=new Rectangle(2,2,Color.BLUE);
+//        Rectangle r3=new Rectangle(3,3,Color.GREEN);
+//        r.relocate(400, 370);
+//        r2.relocate(0, 0);
+//        r3.relocate(800, 470);
+//        view.getChildren().addAll(r,r2,r3);
         
-        model.reset((int)arraySizeSlider.getValue());
-        update(model.getUnsortedList());
+        view.getChildren().clear();
+        
+        double w=view.getWidth();
+        double h=view.getHeight();
+        if (h<=0||w<=0) {
+            //use when the program was init.
+            h=470;
+            w=850;
+        }
+        
+        int[] arr=_model.getUnsortedList();
+        double step=w/(arr.length);
+        double unitWidth=step-3;                                                // 3 is the gap
+        double unitHeight=(h-5)/(arr.length);                    // 5 is the margin between the top
+        double location;
+        int index;
+        for(index=0,location=0;index<arr.length;index++)
+        {
+            double height=unitHeight*arr[index];
+            Rectangle element = new Rectangle(unitWidth,height,Color.RED);
+            element.relocate(location,h-height);
+            view.getChildren().add(element);
+            location+=step;
+        }
+
+        //System.out.println("update called");
         
     }
-
+    
+    
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        
-        algorithm.getItems().addAll("Selection Sort","Merge Sort");
-        arraySizeSlider.setMin(32);
-        arraySizeSlider.setMax(125);
-        arraySizeSlider.setValue(50);
-//        arraySizeSlider.setShowTickMarks(true);
-//        arraySizeSlider.setShowTickLabels(true);
-        arraySize.setText(Double.toString(arraySizeSlider.getValue()));
-        
-        arraySizeSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
-            arraySize.setText(Double.toString(newValue.intValue()));
-            arraySizeSlider_ValueChanged();
-        }); 
-        
-        resetBtn_Click();
-   
+        _model=new Model();
+        strategys.add("Selection Sort");
+        strategys.add("Merge Sort");
+        algorithm.setItems(strategys);
+        algorithm.setValue("Selection Sort");
+        sortingsMethod=new SelectionSort();
+        arraySizeBar_ValueChanged();
+        arraySizeSlider.valueProperty().addListener((ObservableValue<? extends Number> ov, Number old_val, Number new_val) -> {
+            arraySizeBar_ValueChanged();
+        });     //use lambda expression to start a listener.
     }    
-    
-    public void update(int [] Arr){
-        
-        view.getChildren().clear();
-        for (int i=0; i<arraySizeSlider.getValue(); i++){
-            double width  = (view.widthProperty().getValue()/arraySizeSlider.getValue());
-            double height = (Arr[i]/arraySizeSlider.getValue())*view.heightProperty().getValue();
-
-            double x = width*i;
-            double y = view.heightProperty().getValue()-height;
-
-            Rectangle r = new Rectangle();
-            r.setX(x);
-            r.setY(y);
-            r.setWidth(width-1);
-            r.setHeight(height);
-            r.setFill(Color.RED);
-            
-            view.getChildren().add(r);
-        }
-    }
-    
-
 }

@@ -11,64 +11,58 @@ package sortings;
  */
 public class MergeSort implements SortingsStrategy {
     
-    private int[] array;
-    private int[] helper;
-    
-    private int array_size;
-   
     @Override
-    public void sort (int[] inputArr){
-        
-        this.array = inputArr;
-        this.array_size = inputArr.length;
-        this.helper = new int [array_size];
-        mergeSort(0, array_size-1);
-        
-    }
-    
-    private void mergeSort(int first, int last){
+    public void sort(int[] array) {
         new Thread(()->{
-            try{
-                if (first < last){
-                    int middle = first+(last-first)/2;
-                    mergeSort(first, middle);
-                    mergeSort(middle+1,last);
-                    merge(first, middle, last);
-                    Thread.sleep(100);
-                }
-            
-            }catch (InterruptedException ex){
-                
-            }
-            
+            mergeSort(array,0,array.length-1); 
         }).start();
     }
-     
-     
-    private void merge(int low, int middle, int high){
-        
-	for (int i = low; i<=high; i++){
-            helper[i] = array[i];
+    
+    void mergeSort(int[] array, int first, int last){
+        if(first<last){
+            int mid = (first+last)/2;
+            mergeSort(array,first,mid);
+            mergeSort(array,mid+1,last);
+            merge(array,first,mid,last);
         }
+    }
+    
+    void merge(int[] a, int first, int mid, int last){
+        int [] temp=new int[a.length];
+        System.arraycopy(a, 0, temp, 0, a.length);
         
-        int i = low;
-        int j = middle+1;
-        int k= low;
-        
-        while (i<= middle && j<= high){
-            if (helper[i] <= helper [j]){
-                array[k] = helper[i];
-                i++;
+        int beginHalf1=first;
+        int endHalf1=mid;
+        int beginHalf2=mid+1;
+        int endHalf2=last;
+        int index=first;
+        while(beginHalf1<=endHalf1&&beginHalf2<=endHalf2)
+        {
+            if (temp[beginHalf1]<temp[beginHalf2])
+            {
+                a[index]=temp[beginHalf1];
+                beginHalf1++;
             }else{
-                array[k] = helper[j];
-                j++;
+                a[index]=temp[beginHalf2];
+                beginHalf2++;
             }
-            k++;
+            index++;
+            try {
+                    Thread.sleep(30);
+                }catch (InterruptedException ex) {
+                    System.out.println("Error in Merge Sort.");
+                }
+            
         }
-        while (i<=middle){
-            array[k] = helper[i];
-            k++;
-            i++;
+        while(beginHalf1<=endHalf1){
+            a[index]=temp[beginHalf1];
+            beginHalf1++;
+            index++;
+        }
+        while(beginHalf2<=endHalf2){
+            a[index]=temp[beginHalf2];
+            beginHalf2++;
+            index++;
         }
     }
 }

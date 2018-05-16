@@ -14,29 +14,32 @@ import javafx.application.Platform;
 public class SelectionSort implements SortingsStrategy{
   
     @Override
-    public void sort(int[] arr){
-        
-        int n = arr.length;
-        new Thread(() -> {
-        try{  
-            for (int i = 0; i < n-1; i++){
-                int min_idx = i;
-                for (int j = i+1; j < n; j++){
-                    if (arr[j] < arr[min_idx])
-                    min_idx = j;
-                }    
-                int temp = arr[min_idx];
-                arr[min_idx] = arr[i];
-                arr[i] = temp;
-                Thread.sleep(100);
-            }
-   
-        }catch(InterruptedException ex){
-            
-        }
-    }).start();
-            
-   }
+    public void sort(int[] array){
+        new Thread(()->{
+            for (int i=0;i<array.length;i++){
+                int minIndex=i;
+                   for (int j = array.length-1; j >i; j--) {
+                    if (array[minIndex]>array[j]){
+                        minIndex=j;
+                    }
+                       
+                   }
+                   swap(array,minIndex,i);
+                   try {
+                        Thread.sleep(50);
+                    } catch (InterruptedException ex) {
+                        System.out.println("Error in Selection Sort.");
+                    }
+               }
+        }).start(); 
+    }
+    
+    void swap(int[] array, int x, int y){
+        if (x==y) return;
+        int temp=array[x];
+        array[x]=array[y];
+        array[y]=temp;
+    }
         
         
 }
