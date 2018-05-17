@@ -5,8 +5,6 @@
  */
 package sortings;
 
-import javafx.application.Platform;
-
 /**
  *
  * @author alanye

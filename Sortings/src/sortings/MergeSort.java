@@ -36,6 +36,7 @@ public class MergeSort implements SortingsStrategy {
         int beginHalf2=mid+1;
         int endHalf2=last;
         int index=first;
+        
         while(beginHalf1<=endHalf1&&beginHalf2<=endHalf2)
         {
             if (temp[beginHalf1]<temp[beginHalf2])
@@ -48,17 +49,18 @@ public class MergeSort implements SortingsStrategy {
             }
             index++;
             try {
-                    Thread.sleep(30);
-                }catch (InterruptedException ex) {
-                    System.out.println("Error in Merge Sort.");
-                }
-            
+                Thread.sleep(30);
+            }catch (InterruptedException ex) {
+                System.out.println("Error in Merge Sort.");
+            }     
         }
+        
         while(beginHalf1<=endHalf1){
             a[index]=temp[beginHalf1];
             beginHalf1++;
             index++;
         }
+        
         while(beginHalf2<=endHalf2){
             a[index]=temp[beginHalf2];
             beginHalf2++;
